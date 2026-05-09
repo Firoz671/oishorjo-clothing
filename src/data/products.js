@@ -1,0 +1,110 @@
+export const products = [
+  {
+    id: "001",
+    name: "Naksha Oversized Tee",
+    slug: "naksha-oversized-tee",
+    category: "Unisex",
+    price: 1299,
+    tag: "New Arrival",
+    image: "/images/naksha_tee_1778356172545.png",
+    description: "Our signature oversized fit with traditional Naksha motifs subtly embroidered on the back. Made from 100% heavy-weight cotton for a structured yet comfortable drape. Wear your heritage.",
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    collection: "Heritage Drop Vol. 1"
+  },
+  {
+    id: "002",
+    name: "Crimson Monsoon Hoodie",
+    slug: "crimson-monsoon-hoodie",
+    category: "Men",
+    price: 2499,
+    tag: "Best Seller",
+    image: "/images/crimson_hoodie_1778356187092.png",
+    description: "A deep burgundy piece designed for the unpredictable Dhaka evenings. Featuring a relaxed fit, drop shoulders, and a custom gold-tone zipper.",
+    sizes: ["M", "L", "XL"],
+    collection: "Monsoon Essentials"
+  },
+  {
+    id: "003",
+    name: "Golden Hour Silk Shirt",
+    slug: "golden-hour-silk-shirt",
+    category: "Women",
+    price: 3199,
+    tag: "Premium",
+    image: "/images/golden_shirt_1778356206047.png",
+    description: "Flowing silhouette crafted from premium artificial silk. The subtle gold sheen catches the light perfectly, designed for those who appreciate understated luxury.",
+    sizes: ["S", "M", "L"],
+    collection: "Heritage Drop Vol. 1"
+  },
+  {
+    id: "004",
+    name: "Midnight Pathok Jacket",
+    slug: "midnight-pathok-jacket",
+    category: "Men",
+    price: 4599,
+    tag: "Limited Edition",
+    image: "/images/midnight_jacket_1778356228780.png",
+    description: "An ink-black structured jacket with utilitarian pockets and raw edge detailing. The Pathok (reader) jacket is an ode to the intellectuals of '70s Dhaka.",
+    sizes: ["M", "L", "XL", "XXL"],
+    collection: "Archive '71"
+  },
+  {
+    id: "005",
+    name: "Terracotta Wide Leg Trousers",
+    slug: "terracotta-wide-leg-trousers",
+    category: "Women",
+    price: 1899,
+    tag: "",
+    image: "/images/terracotta_trousers_1778356250751.png",
+    description: "High-waisted, wide-leg trousers in a rich terracotta hue. Designed for movement and elegance, blending traditional dye colors with modern streetwear cuts.",
+    sizes: ["S", "M", "L", "XL"],
+    collection: "Earth Tones"
+  },
+  {
+    id: "006",
+    name: "Riksha Art Graphic Tee",
+    slug: "riksha-art-graphic-tee",
+    category: "Unisex",
+    price: 999,
+    tag: "Classic",
+    image: "/images/riksha_tee_1778356264686.png",
+    description: "A tribute to the vibrant street art of Bangladesh. Features a muted, stylized rickshaw motif on a charcoal black canvas. 100% combed cotton.",
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    collection: "Street Canvas"
+  },
+  {
+    id: "007",
+    name: "Jamdani Weave Crop Top",
+    slug: "jamdani-weave-crop-top",
+    category: "Women",
+    price: 1499,
+    tag: "New Arrival",
+    image: "/images/jamdani_top_1778356281017.png",
+    description: "A modern crop top featuring subtle geometric patterns inspired by authentic Jamdani weaves. Perfect for layering under oversized jackets.",
+    sizes: ["S", "M", "L"],
+    collection: "Heritage Drop Vol. 1"
+  },
+  {
+    id: "008",
+    name: "Charcoal Cargo Pants",
+    slug: "charcoal-cargo-pants",
+    category: "Men",
+    price: 2299,
+    tag: "",
+    image: "/images/charcoal_pants_1778356298972.png",
+    description: "Heavy-duty cargo pants in our signature brand-charcoal. Features adjustable cuffs and reinforced stitching for the urban explorer.",
+    sizes: ["M", "L", "XL", "XXL"],
+    collection: "Monsoon Essentials"
+  },
+  {
+    id: "009",
+    name: "Oishorjo Core Tote Bag",
+    slug: "oishorjo-core-tote-bag",
+    category: "Unisex",
+    price: 799,
+    tag: "Accessories",
+    image: "/images/core_tote_1778356317936.png",
+    description: "A thick canvas tote featuring the Oishorjo logo in Space Mono. Spacious enough for your daily essentials and sturdy enough for the daily commute.",
+    sizes: ["One Size"],
+    collection: "Essentials"
+  }
+];
