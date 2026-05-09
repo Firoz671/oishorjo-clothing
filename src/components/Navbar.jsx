@@ -4,9 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ShoppingBag, Menu, X, User } from 'lucide-react';
 import { useScrollPosition } from '../hooks/useScrollPosition';
 import { CartContext } from '../context/CartContext';
+import CartDrawer from './CartDrawer';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const scrollPosition = useScrollPosition();
   const location = useLocation();
   const { getCartCount } = useContext(CartContext);
@@ -64,7 +66,10 @@ const Navbar = () => {
               <Link to="/login" className="hidden sm:block hover:text-brand-gold transition-colors">
                 <User size={20} />
               </Link>
-              <button className="relative hover:text-brand-gold transition-colors">
+              <button 
+                onClick={() => setIsCartOpen(true)}
+                className="relative hover:text-brand-gold transition-colors"
+              >
                 <ShoppingBag size={20} />
                 {getCartCount() > 0 && (
                   <span className="absolute -top-2 -right-2 bg-brand-gold text-brand-black text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">
@@ -121,6 +126,8 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>
   );
 };
