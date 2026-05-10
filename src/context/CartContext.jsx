@@ -1,74 +1,109 @@
-import { createContext, useReducer, useEffect } from 'react';
+import { createContext, useContext, useEffect, useReducer } from 'react';
+import cartService from '../api/cartService';
+import { useAuth } from './AuthContext';
 
-export const CartContext = createContext();
+const CartContext = createContext();
 
-const cartReducer = (state, action) => {
+function cartReducer(state, action) {
   switch (action.type) {
-    case 'ADD_ITEM': {
-      const existingItemIndex = state.findIndex(
-        item => item.id === action.payload.id && item.size === action.payload.size
-      );
-      if (existingItemIndex >= 0) {
-        const newState = [...state];
-        newState[existingItemIndex].quantity += 1;
-        return newState;
-      }
-      return [...state, { ...action.payload, quantity: 1 }];
-    }
-    case 'REMOVE_ITEM':
-      return state.filter(
-        item => !(item.id === action.payload.id && item.size === action.payload.size)
-      );
-    case 'UPDATE_QUANTITY':
-      return state.map(item =>
-        (item.id === action.payload.id && item.size === action.payload.size)
-          ? { ...item, quantity: action.payload.quantity }
-          : item
-      );
-    case 'CLEAR_CART':
-      return [];
+    case 'SET_CART':
+      return { ...state, items: action.payload, isLoading: false };
+    case 'SET_LOADING':
+      return { ...state, isLoading: action.payload };
+    case 'CLEAR':
+      return { ...state, items: [] };
     default:
       return state;
   }
-};
+}
 
-export const CartProvider = ({ children }) => {
-  const [cart, dispatch] = useReducer(cartReducer, [], () => {
-    const localData = localStorage.getItem('oishorjo_cart');
-    return localData ? JSON.parse(localData) : [];
+export function CartProvider({ children }) {
+  const [state, dispatch] = useReducer(cartReducer, {
+    items: [],
+    isLoading: false,
   });
+  const { isAuthenticated } = useAuth();
 
+  // Load cart on auth change
   useEffect(() => {
-    localStorage.setItem('oishorjo_cart', JSON.stringify(cart));
-  }, [cart]);
-
-  const addToCart = (product, size) => {
-    dispatch({ type: 'ADD_ITEM', payload: { ...product, size } });
-  };
-
-  const removeFromCart = (id, size) => {
-    dispatch({ type: 'REMOVE_ITEM', payload: { id, size } });
-  };
-
-  const updateQuantity = (id, size, quantity) => {
-    if (quantity < 1) {
-      removeFromCart(id, size);
-      return;
+    if (isAuthenticated) {
+      fetchCart();
+    } else {
+      // Load guest cart from localStorage
+      const guestCart = JSON.parse(
+        localStorage.getItem('oishorjo_guest_cart') || '[]'
+      );
+      dispatch({ type: 'SET_CART', payload: guestCart });
     }
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { id, size, quantity } });
+  }, [isAuthenticated]);
+
+  const fetchCart = async () => {
+    dispatch({ type: 'SET_LOADING', payload: true });
+    try {
+      const res = await cartService.getCart();
+      if (res.success) {
+        dispatch({ type: 'SET_CART', payload: res.data });
+      }
+    } catch {
+      dispatch({ type: 'SET_LOADING', payload: false });
+    }
   };
 
-  const clearCart = () => {
-    dispatch({ type: 'CLEAR_CART' });
+  const addToCart = async (product_id, size, quantity = 1) => {
+    if (isAuthenticated) {
+      const res = await cartService.addToCart(product_id, size, quantity);
+      if (res.success) await fetchCart();
+    } else {
+      // Guest cart - save to localStorage
+      const guestCart = JSON.parse(
+        localStorage.getItem('oishorjo_guest_cart') || '[]'
+      );
+      const existing = guestCart.find(
+        (i) => i.product_id === product_id && i.size === size
+      );
+      if (existing) {
+        existing.quantity += quantity;
+      } else {
+        guestCart.push({ product_id, size, quantity });
+      }
+      localStorage.setItem('oishorjo_guest_cart', JSON.stringify(guestCart));
+      dispatch({ type: 'SET_CART', payload: guestCart });
+    }
   };
 
-  const getCartCount = () => {
-    return cart.reduce((total, item) => total + item.quantity, 0);
+  const removeItem = async (id) => {
+    if (isAuthenticated) {
+      await cartService.removeItem(id);
+      await fetchCart();
+    } else {
+      const guestCart = JSON.parse(
+        localStorage.getItem('oishorjo_guest_cart') || '[]'
+      ).filter((_, index) => index !== id);
+      localStorage.setItem('oishorjo_guest_cart', JSON.stringify(guestCart));
+      dispatch({ type: 'SET_CART', payload: guestCart });
+    }
   };
+
+  const clearCart = async () => {
+    if (isAuthenticated) {
+      await cartService.clearCart();
+    } else {
+      localStorage.removeItem('oishorjo_guest_cart');
+    }
+    dispatch({ type: 'CLEAR' });
+  };
+
+  const cartCount = state.items.reduce(
+    (total, item) => total + (item.quantity || 1), 0
+  );
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, getCartCount }}>
+    <CartContext.Provider
+      value={{ ...state, addToCart, removeItem, clearCart, cartCount, fetchCart }}
+    >
       {children}
     </CartContext.Provider>
   );
-};
+}
+
+export const useCart = () => useContext(CartContext);

@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 
 // Context
+import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 
 // Components
@@ -19,6 +20,7 @@ import Contact from './pages/Contact';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Checkout from './pages/Checkout';
+import OrderConfirmation from './pages/OrderConfirmation';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -45,6 +47,7 @@ const AnimatedRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
       </Routes>
     </AnimatePresence>
   );
@@ -52,18 +55,20 @@ const AnimatedRoutes = () => {
 
 function App() {
   return (
-    <CartProvider>
-      <Router>
-        <ScrollToTop />
-        <div className="flex flex-col min-h-screen">
-          <Navbar />
-          <main className="flex-grow">
-            <AnimatedRoutes />
-          </main>
-          <Footer />
-        </div>
-      </Router>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <Router>
+          <ScrollToTop />
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-grow">
+              <AnimatedRoutes />
+            </main>
+            <Footer />
+          </div>
+        </Router>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 
